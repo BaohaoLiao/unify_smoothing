@@ -7,5 +7,6 @@ This repository contains the code used for "Unifying Input and Output Smoothing 
 <img src="./images/arch.png"/ width="400px"> <br/>
 <img src="./images/formula.png"/ width="400px">
 </div>
+    + <img src="https://render.githubusercontent.com/render/math?math=q^{src}">
 
 
