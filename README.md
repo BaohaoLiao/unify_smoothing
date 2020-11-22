@@ -7,5 +7,5 @@ This repository contains the code used for "Unifying Input and Output Smoothing 
 <img src="./images/arch.png"/ width="400px">
 </div>
 
-q_{src}
+![\Large q_{src}]
 
