@@ -4,5 +4,5 @@ This repository contains the code used for "Unifying Input and Output Smoothing 
 
 ## Architecture
 <div align=center>
-<img src="./images/arch.png"/ width="800px">
+<img src="./images/arch.png"/ width="200px">
 </div>
