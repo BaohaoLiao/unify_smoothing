@@ -6,3 +6,6 @@ This repository contains the code used for "Unifying Input and Output Smoothing 
 <div align=center>
 <img src="./images/arch.png"/ width="400px">
 </div>
+
+q_{src}
+
