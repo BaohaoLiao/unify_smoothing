@@ -3,7 +3,7 @@ This repository contains the code used for "Unifying Input and Output Smoothing 
 [fairseq](https://github.com/pytorch/fairseq).
 
 * **Architecture**
-  + <img src="https://render.githubusercontent.com/render/math?math= \huge q_{src}">
+  + <img src="https://render.githubusercontent.com/render/math?math=q_{src}">
   <div align=center>
   <img src="./images/arch.png"/ width="400px"> <br/>
   <img src="./images/formula.png"/ width="400px">
