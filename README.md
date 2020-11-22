@@ -5,7 +5,7 @@ This repository contains the code used for "Unifying Input and Output Smoothing 
 * **Architecture**
   + q_{src}, q_{tgt}: Input smoothing
   + q_{out}: Output/target smoothing
-  + Φ: The parameter to control smoothing ratio and sampling method
+  + Φ: The parameter to control smoothing weight and sampling method
   <div align=center>
   <img src="./images/arch.png"/ width="400px"> <br/>
   <img src="./images/formula.png"/ width="400px">
