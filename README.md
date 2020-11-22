@@ -8,5 +8,9 @@ This repository contains the code used for "Unifying Input and Output Smoothing 
 <img src="./images/formula.png"/ width="400px">
 </div>
   + <img src="https://render.githubusercontent.com/render/math?math=q^{src}">
+  
+  
+* **Convolutional Neural Networks (CNN)**
+  + [Language Modeling with Gated Convolutional Ne
 
 
