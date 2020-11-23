@@ -190,5 +190,40 @@ python /path/to/unify_smoothing/train.py \
        > $checkpoint_path/log
 ```
 
+### Inference
+* Use best checkpoint
+```
+python  /path/to/unify_smoothing/generate.py \
+         /path/to/dataset \
+         --path $checkpointpath/checkpoint_best.pt \
+         --batch-size 128 \
+         --beam 4 \
+         --remove-bpe | tee generate.out
+
+grep ^T generate.out | cut -f2- | perl -ple 's{(\S)-(\S)}{$1 ##AT##-##AT## $2}g' > generate.ref
+grep ^H generate.out | cut -f3- | perl -ple 's{(\S)-(\S)}{$1 ##AT##-##AT## $2}g' > generate.sys
+
+python /path/to/unify_smoothing/score.py --sys generate.sys --ref generate.ref > log
+```
+* Average the last five checkpoints
+```
+python  /path/to/unify_smoothing/scripts/average_checkpoints.py \
+       --inputs  $checkpointpath \
+       --num-epoch-checkpoints 5 \
+       --output average5.pt
+
+python  /path/to/unify_smoothing/generate.py \
+         /path/to/dataset \
+         --path average5.pt \
+         --batch-size 128 \
+         --beam 4 \
+         --remove-bpe | tee generate.out
+
+grep ^T generate.out | cut -f2- | perl -ple 's{(\S)-(\S)}{$1 ##AT##-##AT## $2}g' > generate.ref
+grep ^H generate.out | cut -f3- | perl -ple 's{(\S)-(\S)}{$1 ##AT##-##AT## $2}g' > generate.sys
+
+python /path/to/unify_smoothing/score.py --sys generate.sys --ref generate.ref > log
+```
+
 
 
