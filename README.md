@@ -2,7 +2,7 @@
 This repository contains the code used for "Unifying Input and Output Smoothing in Neural Machine Translation" (COLING2020). Our code is based on
 [fairseq](https://github.com/pytorch/fairseq).
 
-* **Architecture**
+### Architecture
   + q_{src}, q_{tgt}: Input smoothing
   + q_{out}: Output/target smoothing
   + Φ: The parameter to control smoothing weight and sampling method
