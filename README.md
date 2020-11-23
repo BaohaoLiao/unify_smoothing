@@ -298,7 +298,7 @@ python /path/to/unify_smoothing/train.py \
 Same as 'Training', you only need to change the translation direction.
 
 * Processing before loading for training <br/>
-You can just load the pretrained Transformer LM or back-translation model by flag '--srcda-file' or '--tgtda-file'. Please also fix the pretrained model by setting '--fix-da-model' and change other corresponding flags, like '--srcda-choice' and '--tgtda-choice'. Then you could apply the same config as 'Trainng'.<br\> 
+You can just load the pretrained Transformer LM or back-translation model by flag '--srcda-file' or '--tgtda-file'. Please also fix the pretrained model by setting '--fix-da-model' and change other corresponding flags, like '--srcda-choice' and '--tgtda-choice'. Then you could apply the same config as 'Trainng'.<br/> 
 However, for BERT we have an extra token <MASK> from pretraining. You need to remove the word embedding for <MASK>. To do this, run the script below before loading:
 ```
 python /path/to/unify_smoothing/scripts/cutLastRow.py --path bert/de/checkpoint_best.pt --out checkpoint_src.pt
