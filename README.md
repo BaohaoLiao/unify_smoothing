@@ -86,6 +86,8 @@ parser.add_argument('--select-choice', choices=['uniform', 'entropy'], default=N
                      help='how to select the tokens to be replaced')
 parser.add_argument('--fix-da-model', action='store_true', default=False)
 ```
+* IWSLT14 datasets: German to English, Dutch to English, Spanish to English
+* WMT14 English to German 
 
 
 
