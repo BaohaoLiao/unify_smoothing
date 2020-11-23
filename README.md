@@ -86,7 +86,7 @@ parser.add_argument('--select-choice', choices=['uniform', 'entropy'], default=N
                      help='how to select the tokens to be replaced')
 parser.add_argument('--fix-da-model', action='store_true', default=False)
 ```
-1. **--srcda**: Whether to use q_{src} and q_{tgt}
+1. **--srcda**: Whether to use input smoothing, i.e. q_{src} and q_{tgt}
 2. **--srcda-choice**: Which smoothing method to apply, could be one of 'uniform', 'unigram', 'lm', 'nmt' and 'bert'. We refer zero-gram LM to uniform in our paper. 'lm' means transformer language model. 'nmt' means applying a whole transformer translation (reverse direction) model as a smoother
 3. **--srcda-file**: Load a pretrained smoother, no need for 'uniform' and 'unigram'
 4. **--srcda-percentage**: The ratio of tokens to be sampled for smoothing
