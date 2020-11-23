@@ -1,6 +1,6 @@
 # Introduction
 This repository contains the code used for "Unifying Input and Output Smoothing in Neural Machine Translation" (COLING2020). Our code is based on
-[fairseq](https://github.com/pytorch/fairseq).
+[fairseq](https://github.com/pytorch/fairseq) and [SCA](https://github.com/teslacool/SCA).
 
 ### Architecture
   + q_{src}, q_{tgt}: Input smoothing
@@ -62,7 +62,33 @@ fairseq-preprocess \
   ```
 
 ### Training
-There are some flags you can set:
+There are some new flags we add
+```
+parser.add_argument('--srcda', action='store_true', default=False,
+                     help='data augmentation in the source side')
+parser.add_argument('--srcda-choice', choices=['uniform', 'unigram', 'lm', 'nmt', 'bert'],
+                     default=None)
+parser.add_argument('--srcda-file', type=str, default='checkpoint_src.pt',
+                     help='load pretrained model for data augmentation, no need for uniform and unigram')
+parser.add_argument('--srcda-percentage', type=float, default=0,
+                     help='how many ratio tokens need to be replaced in source side')
+parser.add_argument('--srcda-smooth', type=float, default=0.1,
+                     help='how many mass need to be assigned to augmentation distribution in source side')
+parser.add_argument('--tgtda', action='store_true', default=False,
+                     help = 'data augmentation in the target side')
+parser.add_argument('--tgtda-choice', choices=['uniform', 'unigram', 'lm', 'bert'],
+                     default=None)
+parser.add_argument('--tgtda-file', type=str, default='checkpoint_tgt.pt',
+                     help='load pretrained model for data augmentation, no need for uniform and unigram')
+parser.add_argument('--tgtda-percentage', type=float, default=0,
+                     help='how many ratio tokens need to be replaced in target side')
+parser.add_argument('--tgtda-smooth', type=float, default=0.1,
+                     help='how many mass need to be assigned to augmentation distribution in target side')
+parser.add_argument('--select-choice', choices=['uniform', 'entropy'], default=None,
+                     help='how to select the tokens to be replaced')
+parser.add_argument('--fix-da-model', action='store_true', default=False)
+```
+
 
 '''
 p=0.2
