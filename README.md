@@ -27,7 +27,7 @@ pip install --editable ./
 
 # Getting Started
 ### Data Preprocessing
-Following the standard [fairseq](https://github.com/pytorch/fairseq) data preprocessing, you can obtain binary translation dataset. For example:
+Following the standard fairseq data preprocessing, you can obtain binary translation dataset. For example:
   * IWSLT14 German to English
 ```
 # Download and prepare the data
@@ -62,7 +62,7 @@ fairseq-preprocess \
   ```
 
 ### Training
-There are some new flags we add
+There are some new flags:
 ```
 parser.add_argument('--srcda', action='store_true', default=False,
                      help='data augmentation in the source side')
@@ -86,6 +86,15 @@ parser.add_argument('--select-choice', choices=['uniform', 'entropy'], default=N
                      help='how to select the tokens to be replaced')
 parser.add_argument('--fix-da-model', action='store_true', default=False)
 ```
+1. **--srcda**: Whether to use input smoothing, i.e. q_{src} and q_{tgt} <br/>
+2. **--srcda-choice**: Which smoothing method to apply, could be one of 'uniform', 'unigram', 'lm', 'nmt' and 'bert'. We refer zero-gram LM to uniform in our paper. 'lm' means transformer language model. 'nmt' means applying a whole transformer translation (reverse direction) model as a smoother <br/>
+3. **--srcda-file**: Load a pretrained smoother, no need for 'uniform' and 'unigram' <br/>
+4. **--srcda-percentage**: The ratio of tokens to be sampled for smoothing <br/>
+5. **--srcda-smooth**: Smoothing weight <br/>
+6. **--select-choice**: How to sample tokens to be smoothed. Could be one of 'uniform' and 'entropy'. 'uniform' means each token has '--srcda-percentage' probability to be smoothed. 'entropy' means the probability of one token to be smoothed is related to its entropy <br/>
+7. **--fix-da-model**: Fix the pretrained smoother <br/>
+* IWSLT14 datasets: German to English, Dutch to English, Spanish to English
+* WMT14 English to German 
 
 
 
