@@ -26,9 +26,9 @@ pip install --editable ./
 * **For faster training** install NVIDIA's [apex](https://github.com/NVIDIA/apex) library.
 
 # Getting Started
-* **Data Preprocessing**
+### Data Preprocessing
 Following the standard [fairseq](https://github.com/pytorch/fairseq) data preprocessing, you can obtain binary translation dataset. For example:
-  + IWSLT14 German to English
+  * IWSLT14 German to English
 ```
 # Download and prepare the data
 cd examples/translation/
@@ -42,7 +42,7 @@ fairseq-preprocess --source-lang de --target-lang en \
     --destdir data-bin/iwslt14.tokenized.de-en \
     --workers 20
 ```
-  + WMT14 English to German
+  * WMT14 English to German
 ```
   # Download and prepare the data
 cd examples/translation/
