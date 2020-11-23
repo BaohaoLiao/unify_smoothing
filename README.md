@@ -27,7 +27,7 @@ pip install --editable ./
 
 # Getting Started
 ### Data Preprocessing
-Following the standard [fairseq](https://github.com/pytorch/fairseq) data preprocessing, you can obtain binary translation dataset. For example:
+Following the standard fairseq data preprocessing, you can obtain binary translation dataset. For example:
   * IWSLT14 German to English
 ```
 # Download and prepare the data
