@@ -226,6 +226,81 @@ python /path/to/unify_smoothing/score.py --sys generate.sys --ref generate.ref >
 ```
 
 ### Ablation Experiments
+If you want to reproduce our ablation experiemnts on IWSLT14 datasets, i.e. applying Transformer LM, BERT and back-translation model as smoother, you need to pretrain them first.
+* Pretraining Transformer LM or BERT on monolingual data
+```
+# Split monolingual data from the bilingual data preprocessed before
+src=de
+tgt=en
+for l in $src $tgt; do
+    srcdir=${src}2${tgt}
+    tgtdir=lmof${l}
+    mkdir -p $tgtdir
+    cp $srcdir/dict.${l}.txt $tgtdir/dict.txt
+    cp $srcdir/train.${src}-${tgt}.${l}.bin $tgtdir/train.bin
+    cp $srcdir/train.${src}-${tgt}.${l}.idx $tgtdir/train.idx
+    cp $srcdir/valid.${src}-${tgt}.${l}.bin $tgtdir/valid.bin
+    cp $srcdir/valid.${src}-${tgt}.${l}.idx $tgtdir/valid.idx
+done
 
+# Train Transformer LM on monolingual data on one GPU
+python /path/to/unify_smoothing/train.py \
+       /path/to/lmofen \  # or /path/to/lmofde \
+       --task language_modeling \
+       --arch transformer_lm_iwslt \
+       --optimizer adam \
+       --adam-betas '(0.9, 0.98)' \
+       --clip-norm 0.0 \
+       --lr-scheduler inverse_sqrt \
+       --warmup-init-lr 1e-07 \
+       --warmup-updates 4000 \
+       --lr 0.0005 \
+       --min-lr 1e-09 \
+       --dropout 0.3 \
+       --weight-decay 0.0 \
+       --seed 4 \
+       --criterion label_smoothed_cross_entropy \
+       --label-smoothing 0.1 \
+       --max-tokens 4096  \
+       --save-dir $checkpoint_path \
+       --no-epoch-checkpoints \
+       --patience 10 \
+       --log-format simple \
+       > log
 
+       
+# Train BERT on monolingual data on one GPU
+python /path/to/unify_smoothing/train.py \
+       /path/to/lmofen \  # or /path/to/lmofde \
+       --task masked_lm \
+       --arch bert_iwslt_de_en \
+       --optimizer adam \
+       --adam-betas '(0.9, 0.98)' \
+       --clip-norm 0.0 \
+       --lr-scheduler inverse_sqrt \
+       --warmup-init-lr 1e-07 \
+       --warmup-updates 4000 \
+       --lr 0.0005 \
+       --min-lr 1e-09 \
+       --weight-decay 0.0 \
+       --criterion masked_lm \
+       --max-tokens 4098 \
+       --tokens-per-sample 4098 \
+       --save-dir $checkpoint_path \
+       --no-epoch-checkpoints \
+       --log-format simple \
+       --patience 10 \
+       --seed 200 \
+       > log
 
+```
+* Pretraining back-translation model
+Same as 'Training', you only need to change the translation direction.
+
+* Processing before loading for training
+You can just load the pretrained Transformer LM or back-translation model by flag '--srcda-file' or '--tgtda-file'. Please also fix the pretrained model by setting '--fix-da-model' and change other corresponding flags, like '--srcda-choice' and '--tgtda-choice'. Then you could apply the same config as 'Trainng'.<br\> 
+However, for BERT we have an extra token <MASK> from pretraining. You need to remove the word embedding for <MASK>. To do this, run the script below before loading:
+```
+python /path/to/unify_smoothing/scripts/cutLastRow.py --path bert/de/checkpoint_best.pt --out checkpoint_src.pt
+python /path/to/unify_smoothing/scripts/cutLastRow.py --path bert/en/checkpoint_best.pt --out checkpoint_tgt.pt
+```
