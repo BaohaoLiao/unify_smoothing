@@ -93,10 +93,11 @@ parser.add_argument('--fix-da-model', action='store_true', default=False)
 5. **--srcda-smooth**: Smoothing weight <br/>
 6. **--select-choice**: How to sample tokens to be smoothed. Could be one of 'uniform' and 'entropy'. 'uniform' means each token has '--srcda-percentage' probability to be smoothed. 'entropy' means the probability of one token to be smoothed is related to its entropy <br/>
 7. **--fix-da-model**: Fix the pretrained smoother <br/>
-* IWSLT14 datasets: German to English, Dutch to English, Spanish to English
+* **IWSLT14 datasets**: German to English, Dutch to English, Spanish to English
   <div align=center>
   <img src="./images/iwslt.png"/ width="600px"> 
   </div>
+  + **Best results**
   To reproduce our best results, i.e. unigram and uniform for all q_{src}, q_{tgt} and q_{out}, you can run the script below on one GPU. You can choose '--srcda-choice' and '--tgtda-choice' to be either uniform or unigram.
 ```
 p=0.2
