@@ -13,5 +13,13 @@ This repository contains the code used for "Unifying Input and Output Smoothing 
   </div>
   
 # Requirements and Installation
+* PyTorch version >= 1.5.0
+* Python version >= 3.6
+* **To install fairseq** and develop locally:
+
+``` bash
+git clone https://github.com/pytorch/fairseq
+cd fairseq
+pip install --editable ./
 
 
