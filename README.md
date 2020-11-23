@@ -18,8 +18,10 @@ This repository contains the code used for "Unifying Input and Output Smoothing 
 * **To install fairseq** and develop locally:
 
 ``` bash
-git clone https://github.com/pytorch/fairseq
-cd fairseq
+git clone https://github.com/BaohaoLiao/unify_smoothing.git
+cd unify_smoothing
 pip install --editable ./
+
+* **For faster training** install NVIDIA's [apex](https://github.com/NVIDIA/apex) library.
 
 
