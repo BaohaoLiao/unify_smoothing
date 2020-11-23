@@ -87,12 +87,12 @@ parser.add_argument('--select-choice', choices=['uniform', 'entropy'], default=N
 parser.add_argument('--fix-da-model', action='store_true', default=False)
 ```
 **--srcda**: Whether to use input smoothing, i.e. q_{src} and q_{tgt} <br/>
-**--srcda-choice**: Which smoothing method to apply, could be one of 'uniform', 'unigram', 'lm', 'nmt' and 'bert'. We refer zero-gram LM to uniform in our paper. 'lm' means transformer language model. 'nmt' means applying a whole transformer translation (reverse direction) model as a smoother
-**--srcda-file**: Load a pretrained smoother, no need for 'uniform' and 'unigram'
-**--srcda-percentage**: The ratio of tokens to be sampled for smoothing
-**--srcda-smooth**: Smoothing weight
-**--select-choice**: How to sample tokens to be smoothed. Could be one of 'uniform' and 'entropy'. 'uniform' means each token has '--srcda-percentage' probability to be smoothed. 'entropy' means the probability of one token to be smoothed is related to its entropy
-**--fix-da-model**: Fix the pretrained smoother
+**--srcda-choice**: Which smoothing method to apply, could be one of 'uniform', 'unigram', 'lm', 'nmt' and 'bert'. We refer zero-gram LM to uniform in our paper. 'lm' means transformer language model. 'nmt' means applying a whole transformer translation (reverse direction) model as a smoother <br/>
+**--srcda-file**: Load a pretrained smoother, no need for 'uniform' and 'unigram' <br/>
+**--srcda-percentage**: The ratio of tokens to be sampled for smoothing <br/>
+**--srcda-smooth**: Smoothing weight <br/>
+**--select-choice**: How to sample tokens to be smoothed. Could be one of 'uniform' and 'entropy'. 'uniform' means each token has '--srcda-percentage' probability to be smoothed. 'entropy' means the probability of one token to be smoothed is related to its entropy <br/>
+**--fix-da-model**: Fix the pretrained smoother <br/>
 * IWSLT14 datasets: German to English, Dutch to English, Spanish to English
 * WMT14 English to German 
 
