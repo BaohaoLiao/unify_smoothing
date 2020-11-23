@@ -97,7 +97,7 @@ parser.add_argument('--fix-da-model', action='store_true', default=False)
   <div align=center>
   <img src="./images/iwslt.png"/ width="600px"> 
   </div>
-  To reproduce our best results, i.e. unigram and uniform for all q_{src}, q_{tgt} and q_{out}, you can run the script below:
+  To reproduce our best results, i.e. unigram and uniform for all q_{src}, q_{tgt} and q_{out}, you can run the script below on one GPU. You can choose '--srcda-choice' and '--tgtda-choice' to be either uniform or unigram.
 ```
 p=0.2
 s=1
