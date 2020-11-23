@@ -62,7 +62,7 @@ fairseq-preprocess \
   ```
 
 ### Training
-There are some new flags we add
+There are some new flags:
 ```
 parser.add_argument('--srcda', action='store_true', default=False,
                      help='data augmentation in the source side')
