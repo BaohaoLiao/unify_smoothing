@@ -66,8 +66,7 @@ There are some new flags we add
 ```
 parser.add_argument('--srcda', action='store_true', default=False,
                      help='data augmentation in the source side')
-parser.add_argument('--srcda-choice', choices=['uniform', 'unigram', 'lm', 'nmt', 'bert'],
-                     default=None)
+parser.add_argument('--srcda-choice', choices=['uniform', 'unigram', 'lm', 'nmt', 'bert'], default=None)
 parser.add_argument('--srcda-file', type=str, default='checkpoint_src.pt',
                      help='load pretrained model for data augmentation, no need for uniform and unigram')
 parser.add_argument('--srcda-percentage', type=float, default=0,
@@ -76,8 +75,7 @@ parser.add_argument('--srcda-smooth', type=float, default=0.1,
                      help='how many mass need to be assigned to augmentation distribution in source side')
 parser.add_argument('--tgtda', action='store_true', default=False,
                      help = 'data augmentation in the target side')
-parser.add_argument('--tgtda-choice', choices=['uniform', 'unigram', 'lm', 'bert'],
-                     default=None)
+parser.add_argument('--tgtda-choice', choices=['uniform', 'unigram', 'lm', 'bert'], default=None)
 parser.add_argument('--tgtda-file', type=str, default='checkpoint_tgt.pt',
                      help='load pretrained model for data augmentation, no need for uniform and unigram')
 parser.add_argument('--tgtda-percentage', type=float, default=0,
