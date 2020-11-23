@@ -143,7 +143,7 @@ python /path/to/unify_smoothing/train.py \
   </div>
   To reproduce our best results on WMT14 English to German, you can run the script below on two GPUs. If you have more available GPUs, you might decrease '--update-freq' for making sure the batch size is above 48000. You can choose '--srcda-choice' and '--tgtda-choice' to be either 'uniform' or 'unigram'. 
 ```
-# This config is used for Transformer base. For Transformer big, please change to 
+# This config is used for Transformer base. For Transformer big, please change the following flags:
 # --arch transformer_da_vaswani_wmt_en_de_big \
 # --lr 0.0005 \
 # --max-tokens 2048 \
