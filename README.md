@@ -97,6 +97,7 @@ parser.add_argument('--fix-da-model', action='store_true', default=False)
   <div align=center>
   <img src="./images/iwslt.png"/ width="600px"> 
   </div>
+  To reproduce our best results, i.e. unigram and uniform for all q_{src}, q_{tgt} and q_{out}, you can run the script below:
 * WMT14 English to German 
   <div align=center>
   <img src="./images/wmt.png"/ width="600px"> 
