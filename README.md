@@ -95,9 +95,12 @@ parser.add_argument('--fix-da-model', action='store_true', default=False)
 7. **--fix-da-model**: Fix the pretrained smoother <br/>
 * IWSLT14 datasets: German to English, Dutch to English, Spanish to English
   <div align=center>
-  <img src="./images/iwslt.png"/ width="400px"> 
+  <img src="./images/iwslt.png"/ width="600px"> 
   </div>
 * WMT14 English to German 
+  <div align=center>
+  <img src="./images/wmt.png"/ width="600px"> 
+  </div>
 
 
 
