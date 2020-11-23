@@ -41,8 +41,9 @@ class MaskedLmLoss(FairseqCriterion):
         logits = model(**sample['net_input'], masked_tokens=masked_tokens)[0]
         targets = model.get_targets(sample, [logits])
 
-        if sample_size != 0:
-            targets = targets[masked_tokens]
+
+        #if sample_size != 0:
+        #    targets = targets[masked_tokens]
 
         loss = F.nll_loss(
             F.log_softmax(

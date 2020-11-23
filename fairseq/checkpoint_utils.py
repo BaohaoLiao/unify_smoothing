@@ -471,3 +471,111 @@ def verify_checkpoint_directory(save_dir: str) -> None:
         raise e
     else:
         os.remove(temp_file_path)
+
+
+def load_lm_state(model, checkpoint):
+    print('Load pretrained data augmentation checkpoint (Transformer LM)')
+    if not PathManager.exists(checkpoint):
+        raise IOError("Model file not found: {}".format(checkpoint))
+
+    from torch.serialization import default_restore_location
+    state = torch.load(checkpoint, map_location=lambda s, l: default_restore_location(s, 'cpu'))
+    def upgrade(obj):
+         if isinstance(obj, OrderedDict):
+            oldkeys = list(obj.keys())
+            for k in oldkeys:
+                if k.startswith('decoder') and k != 'decoder':
+                        newkey = k.split('.', 1)[1]
+                else:
+                     newkey = k
+                obj[newkey] = upgrade(obj[k])
+                if k.startswith('decoder'):
+                    del obj[k]
+         else:
+            return obj
+    upgrade(state['model'])
+    try:
+        model.load_state_dict(state['model'], strict=True)
+    except Exception:
+        raise Exception('Cannot load model parameters from source language model checkpoint, '
+                        'please ensure that the architectures match')
+    return True
+
+def load_bert_state(model, checkpoint):
+    print('Load pretrained data augmentation checkpoint (BERT)')
+    if not PathManager.exists(checkpoint):
+        raise IOError("Model file not found: {}".format(checkpoint))
+
+    from torch.serialization import default_restore_location
+    state = torch.load(checkpoint, map_location=lambda s, l: default_restore_location(s, 'cpu'))
+    def upgrade(obj):
+        if isinstance(obj, OrderedDict):
+            oldkeys = list(obj.keys())
+            for k in oldkeys:
+                if k.startswith('encoder') and k != 'encoder':
+                    newkey = k.split('.', 1)[1]
+                else:
+                    newkey = k
+                obj[newkey] = upgrade(obj[k])
+                if k.startswith('encoder'):
+                    del obj[k]
+        else:
+            return obj
+    upgrade(state['model'])
+    try:
+        model.load_state_dict(state['model'], strict=True)
+    except Exception:
+        raise Exception('Cannot load model parameters from pretrained augmentation model checkpoint, '
+                            'please ensure that the architectures match')
+    return True
+
+def load_nmt_state(model, checkpoint):
+    print('Load pretrained data augmentation checkpoint (Transformer)')
+    if not PathManager.exists(checkpoint):
+        raise IOError("Model file not found: {}".format(checkpoint))
+
+    print('load nmt encoder...')
+    from torch.serialization import default_restore_location
+    state = torch.load(checkpoint, map_location=lambda s, l: default_restore_location(s, 'cpu'))
+    def upgrade_encoder(obj):
+        if isinstance(obj, OrderedDict):
+            oldkeys = list(obj.keys())
+            for k in oldkeys:
+                if k.startswith('encoder') and k != 'encoder':
+                    newkey = k.split('.', 1)[1]
+                else:
+                    newkey = k
+                obj[newkey] = upgrade_encoder(obj[k])
+                if k.startswith('encoder') or k.startswith('decoder'):
+                    del obj[k]
+        else:
+                return obj
+    upgrade_encoder(state['model'])
+    try:
+        model.encoder.load_state_dict(state['model'], strict=True)
+    except Exception:
+        raise Exception('Cannot load nmt encoder parameters from pretrained back translation checkpoint, '
+                            'please ensure that the architectures match')
+    print('Load nmt decoder ...')
+    state = torch.load(checkpoint, map_location=lambda s, l: default_restore_location(s, 'cpu'))
+    def upgrade_decoder(obj):
+        if isinstance(obj, OrderedDict):
+            oldkeys = list(obj.keys())
+            for k in oldkeys:
+                if k.startswith('decoder') and k != 'decoder':
+                    newkey = k.split('.', 1)[1]
+                else:
+                     newkey = k
+                obj[newkey] = upgrade_decoder(obj[k])
+                if k.startswith('encoder') or k.startswith('decoder'):
+                    del obj[k]
+        else:
+            return obj
+    upgrade_decoder(state['model'])
+    try:
+        model.decoder.load_state_dict(state['model'], strict=True)
+    except Exception:
+        raise Exception('Cannot load nmt decoder parameters from pretrained back translation checkpoint, '
+                            'please ensure that the architectures match')
+    return True
+

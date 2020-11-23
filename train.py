@@ -65,11 +65,27 @@ def main(args, init_distributed=False):
         args.max_sentences,
     ))
 
+
     # Load the latest checkpoint if one is available and restore the
     # corresponding train iterator
     extra_state, epoch_itr = checkpoint_utils.load_checkpoint(args, trainer)
 
-    # Train until the learning rate gets too small
+    # Load pretrained data augmentation model
+    if args.task == 'translation_da':
+        if args.srcda:
+            if args.srcda_choice == 'lm':
+                checkpoint_utils.load_lm_state(model.srcdamodel, args.srcda_file)
+            elif args.srcda_choice == 'bert':
+                checkpoint_utils.load_bert_state(model.srcdamodel, args.srcda_file)
+            elif args.srcda_choice == 'nmt':
+                checkpoint_utils.load_nmt_state(model.srcdamodel, args.srcda_file)
+        if args.tgtda:
+            if args.tgtda_choice == 'lm':
+                checkpoint_utils.load_lm_state(model.tgtdamodel, args.tgtda_file)
+            elif args.tgtda_choice == 'bert':
+                checkpoint_utils.load_bert_state(model.tgtdamodel, args.tgtda_file) 
+
+    #Train until the learning rate gets too small
     max_epoch = args.max_epoch or math.inf
     max_update = args.max_update or math.inf
     lr = trainer.get_lr()

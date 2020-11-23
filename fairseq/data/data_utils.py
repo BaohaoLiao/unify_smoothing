@@ -30,6 +30,8 @@ def collate_tokens(values, pad_idx, eos_idx=None, left_pad=False, move_eos_to_be
     """Convert a list of 1d tensors into a padded 2d tensor."""
     size = max(v.size(0) for v in values)
     res = values[0].new(len(values), size).fill_(pad_idx)
+    if not left_pad and move_eos_to_beginning:
+        res_lm = values[0].new(len(values), size).fill_(pad_idx)
 
     def copy_tensor(src, dst):
         assert dst.numel() == src.numel()
@@ -39,10 +41,21 @@ def collate_tokens(values, pad_idx, eos_idx=None, left_pad=False, move_eos_to_be
             dst[1:] = src[:-1]
         else:
             dst.copy_(src)
+    def copy_tensor_lm(src, dst):
+        assert dst.numel() == src.numel()
+        assert src[-1] == eos_idx
+        dst[0] = src[-2]
+        dst[1] = src[-1]
+        dst[2:] = src[:-2]
 
     for i, v in enumerate(values):
         copy_tensor(v, res[i][size - len(v):] if left_pad else res[i][:len(v)])
-    return res
+        if not left_pad and move_eos_to_beginning:
+            copy_tensor_lm(v, res_lm[i][:len(v)])
+    if not left_pad and move_eos_to_beginning:
+        return res, res_lm
+    else:
+        return res
 
 
 def load_indexed_dataset(path, dictionary, dataset_impl=None, combine=False, default='cached'):

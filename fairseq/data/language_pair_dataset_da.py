@@ -11,7 +11,8 @@ from . import data_utils, FairseqDataset
 
 def collate(
     samples, pad_idx, eos_idx, left_pad_source=True, left_pad_target=False,
-    input_feeding=True,
+    input_feeding=True, srcda=False, srcda_choice='uniform', tgtda=False, 
+    tgtda_choice='uniform'
 ):
     if len(samples) == 0:
         return {}
@@ -45,13 +46,21 @@ def collate(
         return 1. / align_weights.float()
 
     id = torch.LongTensor([s['id'] for s in samples])
-    src_tokens = merge('source', left_pad=left_pad_source)
+
+    src_tokens = merge('source', left_pad=left_pad_target)
+    src_tokens_da = None
+    if srcda_choice == 'nmt' or srcda_choice == 'lm':
+        _, src_tokens_da = merge('source', left_pad=left_pad_target, move_eos_to_beginning=True)
     # sort by descending source length
     src_lengths = torch.LongTensor([s['source'].numel() for s in samples])
     src_lengths, sort_order = src_lengths.sort(descending=True)
     id = id.index_select(0, sort_order)
     src_tokens = src_tokens.index_select(0, sort_order)
-
+    if srcda_choice == 'nmt' or srcda_choice == 'lm':
+        src_tokens_da = src_tokens_da.index_select(0, sort_order)
+    elif srcda_choice == 'bert':
+        src_tokens_da = src_tokens
+ 
     prev_output_tokens = None
     target = None
     if samples[0].get('target', None) is not None:
@@ -60,15 +69,22 @@ def collate(
         tgt_lengths = torch.LongTensor([s['target'].numel() for s in samples]).index_select(0, sort_order)
         ntokens = sum(len(s['target']) for s in samples)
 
+        tgt_tokens = merge('target', left_pad=left_pad_source)
+        tgt_tokens = tgt_tokens.index_select(0, sort_order)
+
         if input_feeding:
             # we create a shifted version of targets for feeding the
             # previous output token(s) into the next decoder step
-            prev_output_tokens, _ = merge(
+            prev_output_tokens, prev_output_tokens_da = merge(
                 'target',
                 left_pad=left_pad_target,
                 move_eos_to_beginning=True,
             )
             prev_output_tokens = prev_output_tokens.index_select(0, sort_order)
+            if tgtda_choice == 'bert':
+                prev_output_tokens_da = prev_output_tokens
+            else:
+                prev_output_tokens_da = prev_output_tokens_da.index_select(0, sort_order)
     else:
         ntokens = sum(len(s['source']) for s in samples)
 
@@ -79,11 +95,15 @@ def collate(
         'net_input': {
             'src_tokens': src_tokens,
             'src_lengths': src_lengths,
+            'src_tokens_da': src_tokens_da,
+            'tgt_tokens': tgt_tokens,
+            'tgt_lengths': tgt_lengths,
         },
         'target': target,
     }
     if prev_output_tokens is not None:
         batch['net_input']['prev_output_tokens'] = prev_output_tokens
+        batch['net_input']['prev_output_tokens_da'] = prev_output_tokens_da
 
     if samples[0].get('alignment', None) is not None:
         bsz, tgt_sz = batch['target'].shape
@@ -113,7 +133,7 @@ def collate(
     return batch
 
 
-class LanguagePairDataset(FairseqDataset):
+class LanguagePairDatasetDA(FairseqDataset):
     """
     A pair of torch.utils.data.Datasets.
 
@@ -154,7 +174,9 @@ class LanguagePairDataset(FairseqDataset):
         shuffle=True, input_feeding=True,
         remove_eos_from_source=False, append_eos_to_target=False,
         align_dataset=None,
-        append_bos=False
+        append_bos=False,
+        srcda=False, srcda_choice='uniform',
+        tgtda=False, tgtda_choice='uniform'
     ):
         if tgt_dict is not None:
             assert src_dict.pad() == tgt_dict.pad()
@@ -178,6 +200,11 @@ class LanguagePairDataset(FairseqDataset):
         if self.align_dataset is not None:
             assert self.tgt_sizes is not None, "Both source and target needed when alignments are provided"
         self.append_bos = append_bos
+
+        self.srcda = srcda
+        self.srcda_choice = srcda_choice
+        self.tgtda = tgtda
+        self.tgtda_choice = tgtda_choice
 
     def __getitem__(self, index):
         tgt_item = self.tgt[index] if self.tgt is not None else None
@@ -249,7 +276,8 @@ class LanguagePairDataset(FairseqDataset):
         return collate(
             samples, pad_idx=self.src_dict.pad(), eos_idx=self.src_dict.eos(),
             left_pad_source=self.left_pad_source, left_pad_target=self.left_pad_target,
-            input_feeding=self.input_feeding,
+            input_feeding=self.input_feeding, srcda=self.srcda, srcda_choice=self.srcda_choice, 
+            tgtda=self.tgtda, tgtda_choice=self.tgtda_choice
         )
 
     def num_tokens(self, index):

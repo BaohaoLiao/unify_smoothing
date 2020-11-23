@@ -142,6 +142,7 @@ class BaseFairseqModel(nn.Module):
 
         self.apply(apply_prepare_for_onnx_export_)
 
+
     @classmethod
     def from_pretrained(cls, model_name_or_path, checkpoint_file='model.pt', data_name_or_path='.', **kwargs):
         """
@@ -456,3 +457,23 @@ class FairseqEncoderModel(BaseFairseqModel):
     def max_positions(self):
         """Maximum length supported by the model."""
         return self.encoder.max_positions()
+
+
+class FairseqDA(BaseFairseqModel):
+    def __init__(self, nmtencoder, nmtdecoder, srcdamodel, tgtdamodel):
+        super().__init__()
+        self.srcdamodel = srcdamodel
+        self.tgtdamodel = tgtdamodel
+        self.encoder = nmtencoder
+        self.decoder = nmtdecoder
+
+    def forward_decoder(self, prev_output_tokens, **kwargs):
+        return self.decoder(prev_output_tokens, **kwargs)
+
+    def max_positions(self):
+        return (self.encoder.max_positions(), self.decoder.max_positions())
+
+    def max_decoder_positions(self):
+        """Maximum length supported by the decoder."""
+        return self.decoder.max_positions()
+
