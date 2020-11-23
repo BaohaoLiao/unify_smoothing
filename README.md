@@ -191,7 +191,7 @@ python /path/to/unify_smoothing/train.py \
 ```
 
 ### Inference
-* Use best checkpoint
+* Use the best checkpoint
 ```
 python  /path/to/unify_smoothing/generate.py \
          /path/to/dataset \
