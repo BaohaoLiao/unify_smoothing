@@ -97,7 +97,7 @@ parser.add_argument('--fix-da-model', action='store_true', default=False)
   <div align=center>
   <img src="./images/iwslt.png"/ width="600px"> 
   </div>
-  To reproduce our **best results**, i.e. unigram and uniform for all q_{src}, q_{tgt} and q_{out}, you can run the script below on one GPU. You can choose '--srcda-choice' and '--tgtda-choice' to be either uniform or unigram.
+  To reproduce our **best results** on IWSLT14 datasets, i.e. unigram and uniform for all q_{src}, q_{tgt} and q_{out}, you can run the script below on one GPU. You can choose '--srcda-choice' and '--tgtda-choice' to be either 'uniform' or 'unigram'.
 ```
 p=0.2
 s=1
@@ -123,7 +123,7 @@ python /path/to/unify_smoothing/train.py \
        --dropout 0.3 \
        --max-tokens 4096 \
        --min-lr '1e-09' \
-       --seed $n \
+       --seed 200 \
        --lr-scheduler inverse_sqrt \
        --weight-decay 0.0001 \
        --criterion label_smoothed_cross_entropy \
@@ -137,12 +137,53 @@ python /path/to/unify_smoothing/train.py \
        --log-format simple \
        > $checkpoint_path/log
 ```
-  
-  
-* WMT14 English to German 
+* **WMT14 English to German** 
   <div align=center>
   <img src="./images/wmt.png"/ width="600px"> 
   </div>
+  To reproduce our best results on WMT14 English to German, you can run the script below on two GPUs. If you have more available GPUS, you might decrease '--update-freq' for making sure the batch size is about 48000. You can choose '--srcda-choice' and '--tgtda-choice' to be either 'uniform' or 'unigram'.
+```
+p=0.1
+s=1
+t=0.1
+checkpoint_path=percentage_$p\_smooth_$s\_target_$t
+mkdir $checkpoint_path
+python /path/to/unify_smoothing/train.py \
+       /path/to/WMT14En2De \
+       --arch transformer_da_wmt_en_de \
+       --share-all-embeddings \
+       --task translation_da -s en -t de\
+       --srcda \
+       --srcda-percentage $p \
+       --srcda-choice unigram \
+       --srcda-smooth $s \
+       --tgtda \
+       --tgtda-percentage $p \
+       --tgtda-choice unigram \
+       --tgtda-smooth $s \
+       --select-choice uniform \
+       --seed 200 \
+       --optimizer adam \
+       --adam-betas '(0.9, 0.98)' \
+       --clip-norm 0.0 \
+       --lr-scheduler inverse_sqrt \
+       --warmup-init-lr '1e-07' \
+       --warmup-updates 4000 \
+       --lr 0.0007 \
+       --min-lr '1e-09' \
+       --criterion label_smoothed_cross_entropy \
+       --label-smoothing $t \
+       --weight-decay 0.0 \
+       --max-tokens 3072 \
+       --update-freq 8 \
+       --no-progress-bar \
+       --log-format simple \
+       --log-interval 1000 \
+       --keep-last-epochs 5 \
+       --patience 10 \
+       --save-dir $checkpoint_path \
+       > $checkpoint_path/log
+```
 
 
 
