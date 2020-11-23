@@ -94,6 +94,9 @@ parser.add_argument('--fix-da-model', action='store_true', default=False)
 6. **--select-choice**: How to sample tokens to be smoothed. Could be one of 'uniform' and 'entropy'. 'uniform' means each token has '--srcda-percentage' probability to be smoothed. 'entropy' means the probability of one token to be smoothed is related to its entropy <br/>
 7. **--fix-da-model**: Fix the pretrained smoother <br/>
 * IWSLT14 datasets: German to English, Dutch to English, Spanish to English
+  <div align=center>
+  <img src="./images/iwslt.png"/ width="400px"> 
+  </div>
 * WMT14 English to German 
 
 
