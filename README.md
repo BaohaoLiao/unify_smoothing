@@ -21,6 +21,7 @@ This repository contains the code used for "Unifying Input and Output Smoothing 
 git clone https://github.com/BaohaoLiao/unify_smoothing.git
 cd unify_smoothing
 pip install --editable ./
+```
 
 * **For faster training** install NVIDIA's [apex](https://github.com/NVIDIA/apex) library.
 
