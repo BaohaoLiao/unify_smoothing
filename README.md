@@ -118,7 +118,7 @@ python /path/to/unify_smoothing/train.py \
        --tgtda-smooth $s \
        --select-choice uniform \
        --optimizer adam \
-       --lr 0.0005  -s nl -t en \
+       --lr 0.0005  -s de -t en \
        --label-smoothing 0.1 \
        --dropout 0.3 \
        --max-tokens 4096 \
